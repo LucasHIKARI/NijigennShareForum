@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/MusicForum.iml" filepath="$PROJECT_DIR$/.idea/MusicForum.iml" />
+      <module fileurl="file://$PROJECT_DIR$/music_forum_front/music_forum.iml" filepath="$PROJECT_DIR$/music_forum_front/music_forum.iml" />
+      <module fileurl="file://$PROJECT_DIR$/music_forum_background/music_forum (1).iml" filepath="$PROJECT_DIR$/music_forum_background/music_forum (1).iml" />
     </modules>
   </component>
 </project>
