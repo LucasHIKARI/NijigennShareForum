@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--读取username 一定 读到当前操作系统的登录用户名,为了避免冲突,要么改变键,要么把系统用户名覆盖掉  -->
+    <context:property-placeholder location="classpath:db.properties" local-override="true"/>
+
+    <!-- 开启注解扫描，管理service和dao -->
+    <context:component-scan base-package="com.music.forum.service" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+    </context:component-scan>
+
+
+<!--    <context:property-placeholder location="classpath:db.properties"/>-->
+    <!-- 配置连接池 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+<!--        <property name="driverClass" value="com.mysql.jdbc.Driver"/>-->
+<!--        注意8版本以上mysql换驱动-->
+        <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/music_manage"/>
+        <property name="user" value="root"/>
+        <property name="password" value="123456"/>
+    </bean>
+
+    <!-- 把交给IOC管理 SqlSessionFactory -->
+<!--    还有一点和 Spring Boot 版一样需要注意是：我们自定义的 tk.mybatis.MyMapper 类是不能被 Spring IoC 扫描到的。-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- SqlSession需要建立和数据库的链接,建立链接需要连接池 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- SqlSessionFactory的构建是通过SqlSessionFactoryBuilder("mybatis-config.xml") 这里要给配置-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+    </bean>
+
+    <!-- 没有结束。因为Spring的IOC容器中没有Mapper，因为Mapper是MyBatis生成的Spring不知道。所以要告诉Spring,Mapper在哪里 -->
+    <!-- 扫描完成后交给Spring的IOC,这样才可以DI到Service层 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 数据类型是String，所以用value -->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <!-- Mapper对象 是MapperProxy对象，要基于Mapper接口的 Mapper接口在哪里 ？-->
+        <property name="basePackage" value="com.music.forum.mapper"/>
+    </bean>
+
+    <!-- 配置Spring的声明式事务管理 -->
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+
+
+
+
+</beans>

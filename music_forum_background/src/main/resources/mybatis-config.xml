@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--dtd xml的约束文件，里面定义了这个xml文件可以有哪些标签，标签可以有哪些子标签，可以有哪些属性，以及属性的数据类型等等！-->
+
+<configuration>
+
+    <settings>
+        <!-- 开启下划线和驼峰式的转换-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- 开启日志配置 -->
+        <setting name="logImpl" value="SLF4J"/>
+    </settings>
+
+
+    <typeAliases>
+<!--        写实体类别名-->
+        <package name="com.music.forum.pojo"/>
+    </typeAliases>
+
+
+    <plugins>
+        <!-- com.github.pagehelper为PageHelper类所在包名 -->
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <!-- 使用下面的方式配置参数，后面会有所有的参数介绍 -->
+            <property name="helperDialect" value="mysql"/>
+            <property name="reasonable" value="true"/>
+        </plugin>
+    </plugins>
+
+
+    <!-- mapper就是以前的Dao接口,实现类变成了同名的XML文件 -->
+    <mappers>
+        <package name="com.music.forum.mapper"/>
+    </mappers>
+
+</configuration>

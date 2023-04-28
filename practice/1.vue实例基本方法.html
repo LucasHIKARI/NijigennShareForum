@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="vue.js" type="text/javascript" charset="utf-8"></script>
+
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>music forum</h1><br>
+    <div id="app">{{musicName}}------{{a}}<br>
+
+        {{1==2?"yes":"NO"}}<br>
+        {{msg.split('').reverse().join('')}}
+    </div>
+
+    <script type="text/javascript">
+      var musicName = { a: 2 };
+      var msg = "music";
+      var vm = new Vue({
+        el: "#app",
+        data: {
+            musicName,
+          msg}
+          
+      });
+     console.log( vm.$data.musicName === musicName); // => true
+     console.log( vm.$el === document.getElementById('app')); // => true
+
+// $watch 是一个实例方法 放在a变量变化之前
+vm.$watch('a', function (newValue, oldValue) {
+  // 这个回调将在 `vm.a` 改变后调用
+  console.log(newValue, oldValue);
+})
+vm.$data.a =2222222
+    </script>
+  </body>
+</html>
